@@ -13,6 +13,7 @@
 		505466E21CABD354003E5E3B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 505466E11CABD354003E5E3B /* Images.xcassets */; };
 		505466E51CABD354003E5E3B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 505466E31CABD354003E5E3B /* LaunchScreen.xib */; };
 		505466F11CABD354003E5E3B /* CloudKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 505466F01CABD354003E5E3B /* CloudKitTests.swift */; };
+		505466FC1CABD63E003E5E3B /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 505466FB1CABD63E003E5E3B /* CloudKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,8 @@
 		505466EA1CABD354003E5E3B /* CloudKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CloudKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		505466EF1CABD354003E5E3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		505466F01CABD354003E5E3B /* CloudKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitTests.swift; sourceTree = "<group>"; };
+		505466FA1CABD607003E5E3B /* CloudKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = CloudKit.entitlements; sourceTree = "<group>"; };
+		505466FB1CABD63E003E5E3B /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				505466FC1CABD63E003E5E3B /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +63,7 @@
 		505466CC1CABD354003E5E3B = {
 			isa = PBXGroup;
 			children = (
+				505466FB1CABD63E003E5E3B /* CloudKit.framework */,
 				505466D71CABD354003E5E3B /* CloudKit */,
 				505466ED1CABD354003E5E3B /* CloudKitTests */,
 				505466D61CABD354003E5E3B /* Products */,
@@ -77,6 +82,7 @@
 		505466D71CABD354003E5E3B /* CloudKit */ = {
 			isa = PBXGroup;
 			children = (
+				505466FA1CABD607003E5E3B /* CloudKit.entitlements */,
 				505466DA1CABD354003E5E3B /* AppDelegate.swift */,
 				505466DC1CABD354003E5E3B /* ViewController.swift */,
 				505466DE1CABD354003E5E3B /* Main.storyboard */,
@@ -161,6 +167,12 @@
 				TargetAttributes = {
 					505466D41CABD354003E5E3B = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = T23PE6R3CV;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 					505466E91CABD354003E5E3B = {
 						CreatedOnToolsVersion = 6.1;
@@ -336,9 +348,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CloudKit/CloudKit.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = CloudKit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -346,9 +362,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CloudKit/CloudKit.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = CloudKit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -405,6 +425,7 @@
 				505466F61CABD354003E5E3B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		505466F71CABD354003E5E3B /* Build configuration list for PBXNativeTarget "CloudKitTests" */ = {
 			isa = XCConfigurationList;
@@ -413,6 +434,7 @@
 				505466F91CABD354003E5E3B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
