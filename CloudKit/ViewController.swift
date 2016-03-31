@@ -186,6 +186,84 @@ class ViewController: UIViewController {
         
     }
     
+    func requestPermissionToAccessUserInformation() {
+        
+        println("Requesting permission!")
+        container.requestApplicationPermission(CKApplicationPermissions.PermissionUserDiscoverability, completionHandler: { (status, error) -> Void in
+            
+            if error != nil {
+                
+                println("Error: \(error)")
+                
+            } else {
+                
+                switch status {
+                    
+                case CKApplicationPermissionStatus.Granted:
+                    println("Access is granted. Processing...")
+                    self.retrieveUserInformation()
+                default:
+                    println("We do not have permission to user's information!")
+                    
+                }
+                
+            }
+            
+        })
+        
+    }
+    
+    func retrieveUserInformation() {
+        
+        container.fetchUserRecordIDWithCompletionHandler { (recordId, error) -> Void in
+            
+            if error != nil {
+                
+                println("Error: \(error)")
+                
+            } else {
+                
+                self.container.discoverUserInfoWithUserRecordID(recordId, completionHandler: { (userInfo, error) -> Void in
+                    
+                    if error != nil {
+                        
+                        println("Error: \(error)")
+                        
+                    } else {
+                        
+                        println("First Name: \(userInfo.firstName)")
+                        println("Last Name: \(userInfo.lastName)")
+                        
+                    }
+                    
+                })
+                
+            }
+            
+        }
+        
+        container.discoverAllContactUserInfosWithCompletionHandler { (userInfos, error) -> Void in
+            
+            if error != nil {
+                
+                println("Error: \(error)")
+                
+            } else {
+                
+                for userInfo in userInfos as [CKDiscoveredUserInfo] {
+                    
+                    println("Found with: ")
+                    println("Fist Name: \(userInfo.firstName)")
+                    println("Last Name: \(userInfo.lastName)")
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
     func applicationBecameActive(notification: NSNotification) {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleIdentityChanged:", name: NSUbiquityIdentityDidChangeNotification, object: nil)
@@ -233,6 +311,31 @@ class ViewController: UIViewController {
                         
                     case CKAccountStatus.Available:
                         message = "User is logged in!"
+                        
+                    self.container.statusForApplicationPermission(CKApplicationPermissions.PermissionUserDiscoverability, completionHandler: { (status, error) -> Void in
+                        
+                        if error != nil {
+                            
+                            println("Error: \(error)")
+                            
+                        } else {
+                            
+                            switch status {
+                                
+                            case CKApplicationPermissionStatus.Granted:
+                                println("Access is granted.")
+                                self.retrieveUserInformation()
+                            case CKApplicationPermissionStatus.InitialState:
+                                self.requestPermissionToAccessUserInformation()
+                            default:
+                                println("We do not have permission to user's information!")
+                                
+                            }
+                            
+                        }
+                        
+                    })
+                        
                         let database = self.container.privateCloudDatabase
                                             
                         let makerToLookFor = "Honda"
