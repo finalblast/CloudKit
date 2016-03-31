@@ -12,6 +12,7 @@ import CloudKit
 class ViewController: UIViewController {
 
     let container = CKContainer.defaultContainer()
+    lazy var operationQueue = NSOperationQueue()
     
     enum MotobikeType: String {
         
@@ -233,6 +234,62 @@ class ViewController: UIViewController {
                     case CKAccountStatus.Available:
                         message = "User is logged in!"
                         let database = self.container.privateCloudDatabase
+                                            
+                        let makerToLookFor = "Honda"
+                        let smallestYearToLookFor = 2005
+                        
+                        let predicate = NSPredicate(format: "maker = %@ AND year >= %@", makerToLookFor, smallestYearToLookFor as NSNumber)
+                        let query = CKQuery(recordType: "MyMotobike", predicate: predicate)
+                        
+                        let operation = CKQueryOperation(query: query)
+                        operation.recordFetchedBlock = { (record) -> Void in
+                            
+                            println("Fetched a record = \(record)")
+                            
+                        }
+                        
+                        operation.queryCompletionBlock = { (cursor, error) -> Void in
+                            
+                            if cursor != nil {
+                                
+                                println("A cursor was sent to us. Fetching the rest of the records...")
+                                let newOperation = CKQueryOperation(cursor: cursor)
+                                newOperation.recordFetchedBlock = { (record) -> Void in
+                                    
+                                    println("Fetched a record = \(record)")
+                                    
+                                }
+                                newOperation.queryCompletionBlock = operation.queryCompletionBlock
+                                self.operationQueue.addOperation(newOperation)
+                                
+                            } else {
+                                
+                                println("No cursor came back.")
+                                
+                            }
+                            
+                        }
+                        
+                        self.operationQueue.addOperation(operation)
+                        
+                        database.performQuery(query, inZoneWithID: MotobikeType.Saving.zoneId(), completionHandler: { (records, error) -> Void in
+                            
+                            if error != nil {
+                                
+                                println("Error: \(error)")
+                                
+                            } else {
+                                
+                                for record in records {
+                                    
+                                    println("Record: \(record)")
+                                    
+                                }
+                                
+                            }
+                            
+                        })
+                        
                         database.fetchAllRecordZonesWithCompletionHandler({ (zones, error) -> Void in
                             
                             if error != nil {
@@ -255,7 +312,20 @@ class ViewController: UIViewController {
                                                 
                                             } else {
                                                 
-                                                println(record)
+                                                record.setValue(2015, forKey: "year")
+                                                database.saveRecord(record, completionHandler: { (record, error) -> Void in
+                                                    
+                                                    if error != nil {
+                                                        
+                                                        println("Error: \(error)")
+                                                        
+                                                    } else {
+                                                        
+                                                        println("Edited Record!")
+                                                        
+                                                    }
+                                                    
+                                                })
                                                 
                                             }
                                             
